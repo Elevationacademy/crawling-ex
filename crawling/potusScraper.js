@@ -1,7 +1,7 @@
 const rp = require("request-promise")
 const $ = require('cheerio');
 
-export class PotusScraper {
+module.exports =  class PotusScraper {
 
     _cleanArray(array) {
         let cleanedArr = array.filter((item, i) => {
@@ -16,11 +16,11 @@ export class PotusScraper {
         const presidentElements = $('big > a', html)
         let presIndex = Object.keys(presidentElements)
         presIndex = this._cleanArray(presIndex)
-
+        
         const wikiUrls = presIndex.map(i => {
             return presidentElements[i].attribs.href
         })
-
+        console.log(wikiUrls)
         return wikiUrls
     }
 
@@ -34,12 +34,16 @@ export class PotusScraper {
 
     async runner(url1, url2) {
         let presUrls = await this.scraper(url1)
-        let promRay = []
+        let promiseArray = []
         for (let u of presUrls) {
 
             let p = this.potusParse(url2 + u)
-            promRay.push(p)
+            promiseArray.push(p)
         }
-        return promRay
+        return promiseArray
     }
 }
+
+// let ps = new PotusScraper()
+// // ps.scraper('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States')
+// ps.potusParse('https://en.wikipedia.org/wiki/George_Washington')
